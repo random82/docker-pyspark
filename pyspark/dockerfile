@@ -1,8 +1,12 @@
-FROM jupyter/pyspark-notebook
+FROM jupyter/all-spark-notebook
 
 USER root
 
-# Azure Storage provider for Spark 
+# Plugins:
+# - Azure Storage
+# - SQL server / JDBC
+# - Cosmos DB
+# - MLeap
 ENV HADOOP_SEMVER $HADOOP_VERSION.0
 
 RUN apt-get update -y && \
@@ -77,6 +81,16 @@ RUN apt-get update -y && \
                             "</exclusion>" \
                         "</exclusions> " \
                     "</dependency>" \
+                    "<dependency>" \
+                        "<groupId>ml.combust.mleap</groupId>" \
+                        "<artifactId>mleap-spark_2.11</artifactId>" \
+                        "<version>0.9.0</version>" \
+                    "</dependency>" \
+                    "<dependency>" \
+                        "<groupId>ml.combust.mleap</groupId>" \
+                        "<artifactId>mleap-spark-extension_2.11</artifactId>" \
+                        "<version>0.9.0</version>" \
+                    "</dependency>" \
                 "</dependencies>" \
             "</project>" > /tmp/pom.xml \
     && cd /tmp \
@@ -90,4 +104,4 @@ RUN pip install --upgrade pip
 RUN pip install --upgrade --ignore-installed setuptools
 RUN pip install --no-cache-dir \
     py4j==0.10.6 \
-    spark-magic==0.5.0
+    mleap==0.8.1

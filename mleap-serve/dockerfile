@@ -1,0 +1,2 @@
+FROM combustml/mleap-serving:0.9.0
+
